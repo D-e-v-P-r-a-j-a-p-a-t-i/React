@@ -27,12 +27,8 @@ const Cart = () => {
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
 
   useEffect(() => {
-    if (cartStatus === "idle") {
-      dispatch(fetchCartItems());
-    } else {
-      dispatch(fetchCartItems());
-    }
-  }, [location, dispatch]);
+    dispatch(fetchCartItems()); // Fetch cart items when component mounts
+  }, [dispatch]); // Only run once on component mount
 
   const handleRemove = (itemId) => {
     if (confirm("Sure, want to delete this Product?")) {
@@ -106,9 +102,6 @@ const Cart = () => {
                   secondary={`Price: $${item.productId.price}`}
                 />
                 <Box display="flex" alignItems="center" mt={2} style={{ marginRight: "30px" }}>
-                  {/* <IconButton size="small" onClick={() => decrementQuantity(item._id, item.quantity)}>
-                    <RemoveIcon style={{ backgroundColor: "#2196f3", color: "white", borderRadius: "50%" }} />
-                  </IconButton> */}
                   <TextField
                     id="outlined-basic"
                     label="Qty"
@@ -122,9 +115,6 @@ const Cart = () => {
                     }}
                     style={{ width: "60px", marginLeft: "10px", marginRight: "10px" }}
                   />
-                  {/* <IconButton size="small" onClick={() => incrementQuantity(item._id, item.quantity)}>
-                    <AddIcon style={{ backgroundColor: "#2196f3", color: "white", borderRadius: "50%" }} />
-                  </IconButton> */}
                 </Box>
                 <IconButton
                   edge="end"

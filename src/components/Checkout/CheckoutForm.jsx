@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextField, Button, Container, Grid, Modal, Typography, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderSummary from './OrderSummary';
+import ConfirmationMessage from './ConfirmationMessage'; // Import the ConfirmationMessage component
 import { fetchCartItems, getUserIdFromToken, clearCart } from '../../redux/slices/CartSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ const CheckoutForm = () => {
   const [orderData, setOrderData] = useState(null);
   const [orderId, setOrderId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false); // State to manage showing confirmation message
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
@@ -84,17 +86,23 @@ const CheckoutForm = () => {
       dispatch(clearCart()); // Dispatch clearCart action in Redux
       setOpenModal(false);
       setOrderId(null);
-      navigate('/products'); // Navigate to products page using useNavigate
+      setShowConfirmation(true); // Show confirmation message after closing modal
+      // navigate('/products'); // Uncomment if you want to navigate after closing modal
     } catch (error) {
       alert(error.message);
     }
+  };
+
+  const handleConfirmationClose = () => {
+    setShowConfirmation(false);
+    navigate('/products'); // Navigate to products page after closing confirmation message
   };
 
   return (
     <Container>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Box sx={{ width: '50%' }}>
-          <form onSubmit={handleSubmit} style={{backgroundColor:'white', padding:'20px'}}>
+          <form onSubmit={handleSubmit} style={{ backgroundColor: 'white', padding: '20px' }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -155,6 +163,26 @@ const CheckoutForm = () => {
           outline: 'none',
         }}>
           <OrderSummary orderId={orderId} handleClose={handleCloseModal} />
+        </div>
+      </Modal>
+      {/* Conditional rendering of ConfirmationMessage */}
+      <Modal
+        open={showConfirmation}
+        onClose={handleConfirmationClose}
+        aria-labelledby="confirmation-message-modal"
+        aria-describedby="confirmation-message-description"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div style={{
+          backgroundColor: 'white',
+          padding: 20,
+          outline: 'none',
+        }}>
+          <ConfirmationMessage />
         </div>
       </Modal>
     </Container>
