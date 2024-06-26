@@ -20,21 +20,18 @@ import { removeItemFromCart, fetchCartItems, updateCartItemQuantity } from "../r
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const cartStatus = useSelector((state) => state.cart.status);
   const cartItems = useSelector((state) => state.cart.items);
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
 
   useEffect(() => {
     dispatch(fetchCartItems()); // Fetch cart items when component mounts
-  }, [dispatch]); // Only run once on component mount
+    console.log("useefect");
+  }, [dispatch, cartItems]); // Only run once on component mount
 
   const handleRemove = (itemId) => {
     if (confirm("Sure, want to delete this Product?")) {
       const cartId = cartItems[0]._id;
       dispatch(removeItemFromCart({ itemId, cartId }));
-      navigate("/cart");
     }
   };
 
